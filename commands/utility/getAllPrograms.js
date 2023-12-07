@@ -2,36 +2,49 @@ const { SlashCommandBuilder } = require("discord.js");
 const { fetchData } = require("./../../intigritiApi");
 
 module.exports = {
+  // Define the slash command
   data: new SlashCommandBuilder()
     .setName("all_programs")
     .setDescription(
       "This command returns all the programs the user has access to in their program overview."
     ),
+  // Execute the command
   async execute(interaction) {
     try {
+      // Defer the reply until the data is fetched
+      await interaction.deferReply();
+      // Fetch the data from the API
       const response = await fetchData("/external/researcher/v1/programs");
       const programs = response.records;
 
+      // Check if there are any programs
       if (programs && programs.length > 0) {
+        // Create an embed message with the programs and their details
         const embed = {
           color: 0x0099ff,
           title: "Available Programs",
-          fields: programs.map((program) => ({
-            name: program.name,
-            value: `**ID:** ${program.id}\n**Min Bounty:** ${program.minBounty.value} ${program.minBounty.currency}\n**Max Bounty:** ${program.maxBounty.value} ${program.maxBounty.currency}`,
+          fields: programs.map(({ name, id, minBounty, maxBounty }) => ({
+            name,
+            value: `**ID:** ${id}\n**Min Bounty:** ${minBounty.value} ${minBounty.currency}\n**Max Bounty:** ${maxBounty.value} ${maxBounty.currency}`,
           })),
           timestamp: new Date(),
           footer: {
             text: "IntigritiHelper",
           },
         };
-        await interaction.reply({ embeds: [embed] });
+        // Send the embed message
+        await interaction.editReply({ embeds: [embed] });
       } else {
-        await interaction.reply("Something went wrong.. probably.");
+        // If there are no programs, send an error message
+        await interaction.editReply(
+          "Something went wrong check console for errors."
+        );
       }
     } catch (error) {
+      // Log any errors
       console.error("[command all_programs] Error fetching programs:", error);
-      await interaction.reply(
+      // Send an error message
+      await interaction.editReply(
         "Something went wrong, check console for errors."
       );
     }

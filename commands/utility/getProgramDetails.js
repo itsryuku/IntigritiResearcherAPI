@@ -2,6 +2,8 @@ const { SlashCommandBuilder } = require("discord.js");
 const { fetchData } = require("./../../intigritiApi");
 
 module.exports = {
+  // Define the slash command
+
   data: new SlashCommandBuilder()
     .setName("program_details")
     .setDescription("Returns the details of programs.")
@@ -11,25 +13,36 @@ module.exports = {
         .setDescription("The name of the program to get details for.")
         .setRequired(true)
     ),
+  // Execute the command
   async execute(interaction) {
     try {
+      // Defer the reply until the data is fetched
+      await interaction.deferReply();
+
+      // Get the program name from the interaction options
       const programName = interaction.options.getString("program_name");
 
+      // Fetch all programs
       const allProgramsResponse = await fetchData(
         "/external/researcher/v1/programs"
       );
 
+      // Find the target program from the fetched programs
       const targetProgram = allProgramsResponse.records.find(
         (program) => program.name.toLowerCase() === programName.toLowerCase()
       );
 
+      // If the target program is found
       if (targetProgram) {
+        // Fetch the details of the target program
         const programDetailsResponse = await fetchData(
           `/external/researcher/v1/programs/${targetProgram.id}`
         );
 
+        // Get the program details from the response
         const programDetail = programDetailsResponse;
 
+        // Create an embed message with the program details
         const embed = {
           color: 0x0099ff,
           title: `Details for the program "${programDetail.name}"`,
@@ -63,27 +76,36 @@ module.exports = {
           },
         };
 
-        await interaction.reply({ embeds: [embed] });
+        // Send the embed message
+        await interaction.editReply({ embeds: [embed] });
       } else {
-        await interaction.reply(`Program **"${programName}"** was not found.`);
+        // If the target program is not found, send an error message
+        await interaction.editReply(
+          `Program **"${programName}"** was not found.`
+        );
       }
     } catch (error) {
+      // Log any errors
       console.error(
         "[command program_details] Error fetching program details:",
         error
       );
-      await interaction.reply({
+      // Send an error message
+      await interaction.editReply({
         content: "Something went wrong, check console for errors.",
         ephemeral: true,
       });
     }
   },
 };
+// Function to format the domains information into a string
 
 function formatDomains(domains) {
   const domainString = domains
     .map(
       (domain) =>
+        // Create a string with the domain details
+
         `Endpoint: ${domain.endpoint}\nType: ${domain.type.value}\nTier: ${
           domain.tier.value
         }\nDescription: ${domain.description || "N/A"}`
@@ -93,6 +115,7 @@ function formatDomains(domains) {
   return domainString;
 }
 
+// Function to format the testing requirements into a string
 function formatTestingRequirements(testingRequirements) {
   return `Intigriti.me: ${
     testingRequirements.intigritiMe
