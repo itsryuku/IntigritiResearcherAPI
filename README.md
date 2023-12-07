@@ -19,7 +19,7 @@ node intigritiBot.js
 
 ## DEMO
 
-![DEMO](https://www.youtube.com/watch?v=hLWYXiJh6HQ)
+[Quick DEMO](https://www.youtube.com/watch?v=hLWYXiJh6HQ)
 
 
 
