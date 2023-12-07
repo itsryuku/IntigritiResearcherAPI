@@ -23,7 +23,7 @@ module.exports = {
 
       // Fetch all programs
       const allProgramsResponse = await fetchData(
-        "/external/researcher/v1/programs"
+        "/external/researcher/v1/programs?limit=200"
       );
 
       // Find the target program from the fetched programs
@@ -41,7 +41,7 @@ module.exports = {
 
       // Fetch all program activities
       const programsActivitiesResponse = await fetchData(
-        "/external/researcher/v1/programs/activities"
+        "/external/researcher/v1/programs/activities?limit=200"
       );
 
       // Find the matching activity from the fetched activities

@@ -16,10 +16,10 @@ module.exports = {
 
       // Fetch the activities and programs data from the API
       const activitiesResponse = await fetchData(
-        "/external/researcher/v1/programs/activities"
+        "/external/researcher/v1/programs/activities?limit=200"
       );
       const programsResponse = await fetchData(
-        "/external/researcher/v1/programs"
+        "/external/researcher/v1/programs?limit=200"
       );
 
       // Extract the activities records and create a map of program IDs to names

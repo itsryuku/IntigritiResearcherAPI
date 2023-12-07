@@ -14,7 +14,9 @@ module.exports = {
       // Defer the reply until the data is fetched
       await interaction.deferReply();
       // Fetch the data from the API
-      const response = await fetchData("/external/researcher/v1/programs");
+      const response = await fetchData(
+        "/external/researcher/v1/programs?limit=200" // default returns 50, returning 200 to get all programs
+      );
       const programs = response.records;
 
       // Check if there are any programs
