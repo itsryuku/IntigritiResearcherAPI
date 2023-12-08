@@ -65,26 +65,38 @@ module.exports = {
       const programDomainsResponse = await fetchData(
         `/external/researcher/v1/programs/${programId}/domains/${versionID}`
       );
-      // Get the domains from the response
+
       const domains = programDomainsResponse.domains.content;
 
-      // Initialize the reply content with the program and version IDs
-      let replyContent = `Domains for Program ID ${programId} (Version ID: ${versionID}):\n`;
+      const formattedDomains = [];
 
-      // Loop over the domains
-      domains.forEach((domain) => {
-        // Create a message for each domain with its details
-        const domainMessage = `Domain ID: ${domain.id}
-          Type: ${domain.type.value}
-          Endpoint: ${domain.endpoint}
-          Tier: ${domain.tier.value}\n\n`;
+      for (const domain of domains) {
+        const id = domain.id;
+        const type = domain.type.value;
+        const endpoint = domain.endpoint;
+        const tier = domain.tier.value;
+        const description = domain.description || "No description available";
 
-        // Add the domain message to the reply content
-        replyContent += domainMessage;
-      });
+        const formattedDomain = `**ID:** ${id}\n**Type:** ${type}\n**Endpoint:** ${endpoint}\n**Tier:** ${tier}\n**Description:** ${description}`;
+
+        formattedDomains.push(formattedDomain);
+      }
+
+      const embed = {
+        color: 0x0099ff,
+        title: `Domains for Program ID ${programId} (Version ID: ${versionID})`,
+        fields: formattedDomains.map((formattedDomain) => ({
+          name: "Endpoint",
+          value: formattedDomain,
+        })),
+        timestamp: new Date(),
+        footer: {
+          text: "IntigritiHelper",
+        },
+      };
 
       // Send the reply with the domains details
-      await interaction.editReply(replyContent);
+      await interaction.editReply({ embeds: [embed] });
     } catch (error) {
       // Log any errors
       console.error("Error fetching program domains:", error);
