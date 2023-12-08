@@ -1,6 +1,6 @@
 {
   "token": "discord-bot-token-here",
-  "apiKey": "intigrii-api-here",
+  "apiKey": "intigrii-api-token-here",
   "clientId": "discord-bot-client-id",
   "guildId": "discord-server-id"
 }
