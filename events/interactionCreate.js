@@ -1,5 +1,6 @@
 const { Events } = require("discord.js");
 
+// learn more about this file at https://discordjs.guide/creating-your-bot/command-handling.html#executing-commands
 module.exports = {
   name: Events.InteractionCreate,
   async execute(interaction) {
