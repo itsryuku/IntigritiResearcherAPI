@@ -3,6 +3,7 @@ const { clientId, guildId, token } = require("./config.json");
 const fs = require("node:fs");
 const path = require("node:path");
 
+// learn more about this file at https://discordjs.guide/creating-your-bot/command-deployment.html#guild-commands
 const commands = [];
 // Grab all the command folders from the commands directory you created earlier
 const foldersPath = path.join(__dirname, "commands");
